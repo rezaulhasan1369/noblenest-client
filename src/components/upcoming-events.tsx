@@ -2,6 +2,7 @@ import { ArrowIcon } from "@/components/arrow-icon";
 import Link from "next/link";
 import { EventCard } from "@/components/event-card";
 import type { UpcomingEvent, UpcomingEventsState } from "@/lib/upcoming-events";
+import { EventFeed } from "./event-feed";
 
 export function UpcomingEventsContent({ state, detailsHrefFor, preview = false }: { state: UpcomingEventsState; detailsHrefFor?: (event: UpcomingEvent) => string | undefined; preview?: boolean }) {
   if (state.status === "loading") return <div className="events-loading" aria-busy="true">
@@ -25,7 +26,7 @@ export function UpcomingEvents() {
   return <section id="upcoming-events" className="upcoming-section" aria-labelledby="events-heading" tabIndex={-1}>
     <div className="content-width">
       <div className="section-heading section-heading-row"><div><p className="eyebrow">A little time. A meaningful difference.</p><h2 id="events-heading">Upcoming Events</h2><p className="section-intro">Discover a cause, find your people, and make room for something good.</p></div><Link href="/events" className="text-link">View All Events <ArrowIcon /></Link></div>
-      <UpcomingEventsContent state={{ status: "unavailable" }} />
+      <EventFeed />
     </div>
   </section>;
 }
