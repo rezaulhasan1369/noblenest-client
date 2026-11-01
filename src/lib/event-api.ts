@@ -8,6 +8,8 @@ export type EventInput = {
 export type ApiEvent = EventDetailsRecord & { createdAt: string; updatedAt: string };
 export type EventPage = { events: ApiEvent[]; pagination: { page: number; pageSize: 6 } };
 export type OwnedEventPage = { events: ApiEvent[]; pagination: { page: number; pageSize: number } };
+export type Participation = { id: string; eventId: string; joinedAt: string };
+export type JoinResult = { participation: Participation; alreadyJoined: boolean };
 export class EventApiError extends Error {
   status: number;
   constructor(status: number) {
@@ -97,6 +99,15 @@ export function createEventApi({ baseUrl, publicFetch = fetch, authenticatedFetc
     return parseApiEvent(result.event);
   }
   return {
+    async join(id: string, signal?: AbortSignal): Promise<JoinResult> {
+      const requestedId = eventId(id);
+      const response = await request(`/api/events/${requestedId}/join`, { method: "POST", signal }, true);
+      if (response.status !== 200 && response.status !== 201) throw new EventApiError(502);
+      const data = record((await json(response)).participation);
+      const participationId = text(data.id, 24), joinedEventId = text(data.eventId, 24);
+      if (!/^[a-f0-9]{24}$/i.test(participationId) || !/^[a-f0-9]{24}$/i.test(joinedEventId) || joinedEventId.toLowerCase() !== requestedId.toLowerCase()) throw new EventApiError(502);
+      return { participation: { id: participationId, eventId: joinedEventId, joinedAt: timestamp(data.joinedAt) }, alreadyJoined: response.status === 200 };
+    },
     async mine(page = 1, pageSize = 12, signal?: AbortSignal): Promise<OwnedEventPage> {
       const requested = ownedEventPagination(page, pageSize);
       const data = await json(await request(`/api/events/mine?page=${requested.page}&pageSize=${requested.pageSize}`, { method: "GET", signal }, true));
