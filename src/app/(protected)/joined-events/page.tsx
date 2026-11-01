@@ -1,0 +1,3 @@
+import { requireSession } from "@/lib/auth-server";
+import Link from "next/link"; import { PageShell, ProtectedPreviewNotice, DataUnavailable } from "@/components/page-shell";
+export default async function JoinedPage(){await requireSession("/joined-events"); return <PageShell eyebrow="Joined Events" title="Keep your good intentions close." description="Your joined activities will be displayed in event-date order when participation data is connected."><ProtectedPreviewNotice /><DataUnavailable title="A space for the things you show up for." description="No personal participation data is loaded. Joining events is not available yet." /><Link href="/events" className="text-link">Explore Upcoming Events</Link></PageShell>;}

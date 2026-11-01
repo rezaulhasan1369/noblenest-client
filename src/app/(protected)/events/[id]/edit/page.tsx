@@ -1,0 +1,3 @@
+import { requireSession } from "@/lib/auth-server";
+import { PageShell, ProtectedPreviewNotice } from "@/components/page-shell"; import { EventForm } from "@/components/event-form";
+export default async function EditPage({params}:{params:Promise<{id:string}>}){const { id } = await params; await requireSession("/events/" + encodeURIComponent(id) + "/edit"); return <PageShell eyebrow="Edit Event" title="Make room for a better plan." description="Only the verified creator will be able to update an event. No event record is loaded in this preview."><ProtectedPreviewNotice /><EventForm editing /></PageShell>;}
