@@ -1,10 +1,21 @@
-import { BackendHealth } from "@/components/backend-health";
+import { HomeHero } from "@/components/home-hero";
+import { CommunityImpact } from "@/components/community-impact";
+import { HomeCommunity } from "@/components/home-community";
+import { HomeFeatures } from "@/components/home-features";
+import { UpcomingEvents } from "@/components/upcoming-events";
+import { CommunityGallery } from "@/components/community-gallery";
+import { NewsletterSection } from "@/components/newsletter-section";
+
 export default function Home() {
-  return <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center gap-6 p-8">
-    <p className="text-sm">Phase D0 / Deployment verification</p>
-    <h1 className="text-4xl font-semibold">NobleNest</h1>
-    <p>The frontend is running. Check the backend connection below.</p>
-    <BackendHealth />
-    <p className="text-sm text-gray-600">Authentication, events, and the approved visual design are planned for later phases.</p>
-  </main>;
+  return <>
+    <main id="main-content" tabIndex={-1}>
+      <HomeHero />
+      <CommunityImpact />
+      <UpcomingEvents />
+      <HomeCommunity />
+      <HomeFeatures />
+      <CommunityGallery />
+      <NewsletterSection />
+    </main>
+  </>;
 }
