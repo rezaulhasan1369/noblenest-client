@@ -1,2 +1,7 @@
-import Link from "next/link"; import { PageShell, DataUnavailable } from "@/components/page-shell";
-export default async function EventDetails({params}:{params:Promise<{id:string}>}){await params;return <PageShell eyebrow="Event details" title="A closer look at a small act." description="Everything you need to know before you show up."><div className="detail-grid"><DataUnavailable title="This event is not loaded." description="The live event details service is not connected. No event, organizer or attendance information has been verified." /><aside className="detail-panel"><h2>Before you join</h2><dl><dt>Location</dt><dd>Not loaded</dd><dt>Event type</dt><dd>Not loaded</dd><dt>Date</dt><dd>Not loaded</dd></dl><button className="button button-solid" disabled>Join Event</button><p>Joining requires a verified account and a real upcoming event. It is not available in this interface preview.</p></aside></div><Link href="/events" className="text-link">Back to Upcoming Events</Link></PageShell>;}
+import Link from "next/link";
+import { PageShell } from "@/components/page-shell";
+import { EventRecord } from "@/components/event-record";
+export default async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <PageShell eyebrow="Event details" title="A closer look at a small act." description="Everything you need to know before you show up."><EventRecord key={id} id={id} /><Link href="/events" className="text-link">Back to Upcoming Events</Link></PageShell>;
+}
