@@ -23,3 +23,14 @@ approved theme tokens only when components are needed in later phases.
 
 See `../docs/phase-d0-deployment-foundation.md` in the local workspace for the full
 verification report and preserved design decisions. This client does not implement them.
+
+## Deployment verification
+
+- Production frontend: https://noblenest-client-dps25.vercel.app
+- Production API: https://noblenest-api.onrender.com
+
+After an approved GitHub push to `main`, verify that Vercel automatically creates
+a production deployment, reaches READY, and reports the exact pushed Git commit SHA.
+Confirm the frontend loads and reloads successfully, then use **Check backend
+connection** to verify communication with the production API. Automatic deployment
+remains unverified until these checks pass; do not substitute a manual deployment.
