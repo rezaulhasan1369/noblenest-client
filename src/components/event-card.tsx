@@ -4,7 +4,7 @@ import { ArrowIcon } from "@/components/arrow-icon";
 import type { UpcomingEvent } from "@/lib/upcoming-events";
 import { eventImageManifest } from "@/lib/event-image-manifest";
 
-export function EventCard({ event, detailsHref, preview = false }: { event: UpcomingEvent; detailsHref?: string; preview?: boolean }) {
+export function EventCard({ event, detailsHref, editHref, preview = false }: { event: UpcomingEvent; detailsHref?: string; editHref?: string; preview?: boolean }) {
   // Only enrich an exact owner-asset URL match; future uploaded URLs stay intact.
   const image = eventImageManifest.find(asset => asset.src === event.thumbnailUrl);
   const date = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Dhaka" }).format(new Date(event.eventDate));
@@ -20,6 +20,7 @@ export function EventCard({ event, detailsHref, preview = false }: { event: Upco
       {detailsHref
         ? <Link className="event-action" href={detailsHref} aria-label={`View Event: ${event.title}`}>View Event <ArrowIcon diagonal /></Link>
         : <div className="event-action-unavailable"><button className="event-action" disabled type="button">View Event <ArrowIcon diagonal /></button><p>Event details are not available yet.</p></div>}
+      {editHref && <Link className="text-link" href={editHref} aria-label={`Edit Event: ${event.title}`}>Edit Event</Link>}
     </div>
   </article>;
 }

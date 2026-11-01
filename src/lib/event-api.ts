@@ -7,6 +7,7 @@ export type EventInput = {
 };
 export type ApiEvent = EventDetailsRecord & { createdAt: string; updatedAt: string };
 export type EventPage = { events: ApiEvent[]; pagination: { page: number; pageSize: 6 } };
+export type OwnedEventPage = { events: ApiEvent[]; pagination: { page: number; pageSize: number } };
 export class EventApiError extends Error {
   status: number;
   constructor(status: number) {
@@ -24,6 +25,11 @@ export function eventId(value: string) {
 export function eventPage(value: string | number = 1) {
   if (!/^[1-9][0-9]{0,3}$/.test(String(value)) || Number(value) > 1000) throw new EventApiError(400);
   return Number(value);
+}
+export function ownedEventPagination(page: string | number = 1, pageSize: string | number = 12) {
+  const currentPage = eventPage(page);
+  if (!/^[1-9][0-9]?$/.test(String(pageSize)) || Number(pageSize) > 50) throw new EventApiError(400);
+  return { page: currentPage, pageSize: Number(pageSize) };
 }
 function record(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new EventApiError(502);
@@ -51,8 +57,8 @@ export function parseApiEvent(value: unknown): ApiEvent {
     eventDate: timestamp(data.eventDate), creatorId: text(data.creatorId, 128),
     createdAt: timestamp(data.createdAt), updatedAt: timestamp(data.updatedAt) };
 }
-function parseList(value: unknown): ApiEvent[] {
-  if (!Array.isArray(value) || value.length > 6) throw new EventApiError(502);
+function parseList(value: unknown, limit = 6): ApiEvent[] {
+  if (!Array.isArray(value) || value.length > limit) throw new EventApiError(502);
   const events = value.map(parseApiEvent), ids = new Set<string>();
   for (let index = 0; index < events.length; index++) {
     const event = events[index], previous = events[index - 1];
@@ -91,6 +97,13 @@ export function createEventApi({ baseUrl, publicFetch = fetch, authenticatedFetc
     return parseApiEvent(result.event);
   }
   return {
+    async mine(page = 1, pageSize = 12, signal?: AbortSignal): Promise<OwnedEventPage> {
+      const requested = ownedEventPagination(page, pageSize);
+      const data = await json(await request(`/api/events/mine?page=${requested.page}&pageSize=${requested.pageSize}`, { method: "GET", signal }, true));
+      const pagination = record(data.pagination);
+      if (pagination.page !== requested.page || pagination.pageSize !== requested.pageSize) throw new EventApiError(502);
+      return { events: parseList(data.events, requested.pageSize), pagination: requested };
+    },
     async upcoming(signal?: AbortSignal) { return parseList((await json(await request("/api/events/upcoming", { signal }))).events); },
     async list(page = 1, signal?: AbortSignal): Promise<EventPage> {
       eventPage(page);
