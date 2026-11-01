@@ -10,6 +10,8 @@ export type EventPage = { events: ApiEvent[]; pagination: { page: number; pageSi
 export type OwnedEventPage = { events: ApiEvent[]; pagination: { page: number; pageSize: number } };
 export type Participation = { id: string; eventId: string; joinedAt: string };
 export type JoinResult = { participation: Participation; alreadyJoined: boolean };
+export type JoinedParticipation = { participationId: string; joinedAt: string; event: ApiEvent };
+export type JoinedEventPage = { events: JoinedParticipation[]; pagination: { page: number; pageSize: number } };
 export class EventApiError extends Error {
   status: number;
   constructor(status: number) {
@@ -99,6 +101,27 @@ export function createEventApi({ baseUrl, publicFetch = fetch, authenticatedFetc
     return parseApiEvent(result.event);
   }
   return {
+    async joined(page = 1, pageSize = 12, signal?: AbortSignal): Promise<JoinedEventPage> {
+      const requested = ownedEventPagination(page, pageSize);
+      const data = await json(await request(`/api/events/joined?page=${requested.page}&pageSize=${requested.pageSize}`, { method: "GET", signal }, true));
+      const pagination = record(data.pagination);
+      if (pagination.page !== requested.page || pagination.pageSize !== requested.pageSize || !Array.isArray(data.events) || data.events.length > requested.pageSize) throw new EventApiError(502);
+      const ids = new Set<string>();
+      const events: JoinedParticipation[] = data.events.map(value => {
+        const row = record(value), participationId = text(row.participationId, 24);
+        if (!/^[a-f0-9]{24}$/i.test(participationId) || ids.has(participationId.toLowerCase())) throw new EventApiError(502);
+        ids.add(participationId.toLowerCase());
+        return { participationId, joinedAt: timestamp(row.joinedAt), event: parseApiEvent(row.event) };
+      });
+      for (let index = 1; index < events.length; index++) {
+        const previous = events[index - 1], current = events[index];
+        const order = previous.event.eventDate.localeCompare(current.event.eventDate)
+          || previous.event.id.toLowerCase().localeCompare(current.event.id.toLowerCase())
+          || previous.participationId.toLowerCase().localeCompare(current.participationId.toLowerCase());
+        if (order > 0) throw new EventApiError(502);
+      }
+      return { events, pagination: requested };
+    },
     async join(id: string, signal?: AbortSignal): Promise<JoinResult> {
       const requestedId = eventId(id);
       const response = await request(`/api/events/${requestedId}/join`, { method: "POST", signal }, true);
