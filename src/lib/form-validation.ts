@@ -21,7 +21,10 @@ export function validateEvent(values: EventFields, now = Date.now()): FieldError
   for (const key of ["title", "description", "eventType", "location"] as const) if (!values[key].trim()) errors[key] = "This field is required.";
   if (values.title.length > 200) errors.title = "Use no more than 200 characters.";
   if (values.description.length > 5000) errors.description = "Use no more than 5000 characters.";
+  if (values.location.length > 300) errors.location = "Use no more than 300 characters.";
+  if (!["Cleanup", "Plantation", "Donation", "Community service"].includes(values.eventType)) errors.eventType = "Choose an approved event type.";
   if (!validWebUrl(values.thumbnailUrl)) errors.thumbnailUrl = "Enter a valid HTTPS image URL without credentials.";
+  if (values.thumbnailUrl.length > 2048 || /[\s\\\u0000-\u001f\u007f]/.test(values.thumbnailUrl) || !values.thumbnailUrl.startsWith("https://")) errors.thumbnailUrl = "Enter a valid HTTPS image URL without credentials.";
   if (!values.eventDate || !Number.isFinite(Date.parse(values.eventDate)) || Date.parse(values.eventDate) <= now) errors.eventDate = "Choose a future date and time.";
   return errors;
 }
