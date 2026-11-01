@@ -1,0 +1,27 @@
+export type FieldErrors = Record<string, string>;
+export type AuthFields = { name?: string; email: string; password: string; image?: string };
+export type EventFields = { title: string; description: string; eventType: string; thumbnailUrl: string; location: string; eventDate: string };
+export function validWebUrl(value: string) {
+  try { const url = new URL(value); return url.protocol === "https:" && !url.username && !url.password; } catch { return false; }
+}
+export function validateAuth(values: AuthFields, mode: "login" | "register"): FieldErrors {
+  const errors: FieldErrors = {};
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email) || values.email.length > 254) errors.email = "Enter a valid email address.";
+  if (!values.password) errors.password = "Enter your password.";
+  if (values.password.length > 128) errors.password = "Use no more than 128 characters.";
+  if (mode === "register") {
+    if (!values.name?.trim() || values.name.length > 100) errors.name = "Enter your name (up to 100 characters).";
+    if (values.password.length < 6 || !/[A-Z]/.test(values.password) || !/[a-z]/.test(values.password)) errors.password = "Use at least 6 characters with an uppercase and a lowercase letter.";
+    if (values.image && !validWebUrl(values.image)) errors.image = "Use a valid HTTPS photo URL without credentials.";
+  }
+  return errors;
+}
+export function validateEvent(values: EventFields, now = Date.now()): FieldErrors {
+  const errors: FieldErrors = {};
+  for (const key of ["title", "description", "eventType", "location"] as const) if (!values[key].trim()) errors[key] = "This field is required.";
+  if (values.title.length > 200) errors.title = "Use no more than 200 characters.";
+  if (values.description.length > 5000) errors.description = "Use no more than 5000 characters.";
+  if (!validWebUrl(values.thumbnailUrl)) errors.thumbnailUrl = "Enter a valid HTTPS image URL without credentials.";
+  if (!values.eventDate || !Number.isFinite(Date.parse(values.eventDate)) || Date.parse(values.eventDate) <= now) errors.eventDate = "Choose a future date and time.";
+  return errors;
+}
