@@ -1,0 +1,4 @@
+.auth-password-control { position: relative; }
+.auth-panel .auth-password-control input { padding-right: 84px; }
+.auth-password-visibility { position: absolute; right: 4px; top: 4px; min-width: 66px; min-height: 44px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-soft); color: var(--text); font-size: 13px; cursor: pointer; }
+.auth-password-visibility:hover { background: var(--surface-raised); }
