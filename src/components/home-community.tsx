@@ -9,7 +9,7 @@ export function HomeCommunity() {
     <div className="content-width community-inner">
       <div className="community-copy"><p className="eyebrow">More than events · the NobleNest idea</p>
         <h2 id="purpose-heading">People. Purpose.<br /><em>Possibility.</em></h2>
-        <p>A better world begins a little closer to home. NobleNest is taking shape as a place to find meaningful activities, share your ideas, and connect through a cause.</p>
+        <p>A better world begins a little closer to home. Find meaningful activities, share your ideas, and connect through a cause.</p>
         <a href="#features" className="button button-light">Find your little good <ArrowIcon /></a>
       </div>
       <div className="community-collage">
@@ -19,7 +19,7 @@ export function HomeCommunity() {
       </div>
       <div id="ways-to-help" className="community-values" tabIndex={-1}><p className="eyebrow">What&apos;s your little good?</p>
         <p><BotanicalMark />Meet like-minded people</p><p><BotanicalMark />Support a local cause</p><p><BotanicalMark />Contribute to a stronger community</p>
-        <span>Illustrative photography. Event participation will be connected in a later phase.</span>
+        <span>Illustrative photography. Explore upcoming events to find your next activity.</span>
       </div>
     </div>
   </section>;

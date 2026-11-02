@@ -16,7 +16,7 @@ export function HomeHero() {
             <Link href="/events" className="button button-light">Explore Events <ArrowIcon /></Link>
             <Link href="/create-event" className="button hero-secondary" aria-describedby="hero-account-note">Create Event</Link>
           </div>
-          <p className="hero-account-note" id="hero-account-note">An account is required to prepare an initiative. Live event publishing is coming later.</p>
+          <p className="hero-account-note" id="hero-account-note">Sign in to create an initiative and join community activities.</p>
         </div>
         <figure className="hero-visual">
           <div className="hero-photo-frame"><Image src={heroPhoto} alt="A group of volunteers working together to plant a young tree" fill sizes="(max-width: 767px) 90vw, 50vw" preload placeholder="blur" className="hero-photo" /></div>

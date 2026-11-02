@@ -3,12 +3,10 @@ import Link from "next/link";
 import { EventCard } from "@/components/event-card";
 import type { UpcomingEvent, UpcomingEventsState } from "@/lib/upcoming-events";
 import { EventFeed } from "./event-feed";
+import { EventLoading } from "./event-loading";
 
 export function UpcomingEventsContent({ state, detailsHrefFor, preview = false }: { state: UpcomingEventsState; detailsHrefFor?: (event: UpcomingEvent) => string | undefined; preview?: boolean }) {
-  if (state.status === "loading") return <div className="events-loading" aria-busy="true">
-    <p role="status" className="section-note">Loading upcoming events…</p>
-    <div className="events-grid" aria-hidden="true">{Array.from({ length: 6 }, (_, index) => <div className="event-skeleton" key={index}><div /><span /><span /></div>)}</div>
-  </div>;
+  if (state.status === "loading") return <EventLoading />;
   if (state.status === "ready" && state.events.length > 0) return <div className="events-grid">{state.events.map(event => <EventCard event={event} detailsHref={detailsHrefFor?.(event)} preview={preview} key={event.id} />)}</div>;
   const messages = {
     unavailable: { label: "Live feed · not connected", title: "Good things are taking shape.", description: "The event feed isn’t connected yet. Upcoming community activities will appear here when live event data is available." },

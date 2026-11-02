@@ -6,8 +6,9 @@ import { eventsApi } from "@/lib/event-client";
 import { EventApiError, type JoinedEventPage } from "@/lib/event-api";
 import { EventCard } from "./event-card";
 import { DataUnavailable } from "./page-shell";
+import { EventLoading } from "./event-loading";
 
-function Loading() { return <p className="section-note" role="status" aria-busy="true">Loading your joined events...</p>; }
+function Loading() { return <EventLoading message="Loading your joined events..." privateCards />; }
 function LoginAgain({ page, pageSize }: { page: number; pageSize: number }) {
   return <><DataUnavailable title="Please log in again" description="Your session could not be verified. Log in again to load your joined events." /><Link className="text-link" href={`/login?returnTo=${encodeURIComponent(`/joined-events?page=${page}&pageSize=${pageSize}`)}`}>Log in again</Link></>;
 }

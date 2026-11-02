@@ -7,9 +7,11 @@ import { validateEvent, type FieldErrors, type EventFields } from "@/lib/form-va
 import { EVENT_CATEGORIES, EventApiError, eventErrorMessage, type ApiEvent, type EventInput } from "@/lib/event-api";
 import { eventsApi } from "@/lib/event-client";
 import { localEventDateToUtc, utcEventDateToLocal } from "@/lib/event-date";
+import { useAuth } from "./auth-provider";
 
 export function EventForm({ initialEvent }: { initialEvent?: ApiEvent }) {
   const router = useRouter(), lock = useRef(false);
+  const { notify } = useAuth();
   const [errors, setErrors] = useState<FieldErrors>({}), [status, setStatus] = useState("");
   const [pending, setPending] = useState(false), [expired, setExpired] = useState(false);
   const editing = !!initialEvent, returnTo = initialEvent ? `/events/${initialEvent.id}/edit` : "/create-event";
@@ -27,7 +29,8 @@ export function EventForm({ initialEvent }: { initialEvent?: ApiEvent }) {
     const input: EventInput = { ...values, eventDate, eventType: values.eventType as EventInput["eventType"] };
     try {
       const saved = initialEvent ? await eventsApi.update(initialEvent.id, input) : await eventsApi.create(input);
-      setStatus(editing ? "Event updated." : "Event created."); router.push(`/events/${saved.id}`); router.refresh();
+      const message = editing ? "Event updated." : "Event created.";
+      setStatus(message); notify(message); router.push(editing ? `/events/${saved.id}` : "/events"); router.refresh();
     } catch (failure) {
       setStatus(eventErrorMessage(failure)); setExpired(failure instanceof EventApiError && failure.status === 401);
       lock.current = false; setPending(false);

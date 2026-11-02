@@ -9,6 +9,7 @@ import { DataUnavailable } from "./page-shell";
 import { EventThumbnail } from "./event-thumbnail";
 import { EventForm } from "./event-form";
 import { JoinEvent } from "./join-event";
+import { EventLoading } from "./event-loading";
 
 type RecordState = { id: string; event?: ApiEvent; error?: string };
 function useEventRecord(id: string) {
@@ -26,7 +27,7 @@ function useEventRecord(id: string) {
 }
 function RecordStatus({ state }: { state: RecordState }) {
   return state.error ? <DataUnavailable title="Event unavailable" description={state.error} />
-    : <p className="section-note" role="status" aria-busy="true">Loading event details...</p>;
+    : <EventLoading message="Loading event details..." detail />;
 }
 function OwnerActions({ event }: { event: ApiEvent }) {
   const router = useRouter(), lock = useRef(false);

@@ -55,6 +55,15 @@ body { font-size: 15px; }
 .event-action:disabled { color: var(--text-muted); background: var(--surface-soft); border: 1px solid var(--line); }
 .event-action-unavailable p { margin-top: 10px; }
 .event-skeleton { border-radius: var(--radius-card); overflow: hidden; }
+.events-loading > .section-note { margin-bottom: 16px; }
+.events-loading .event-skeleton { background: var(--surface-raised); border: 1px solid var(--line); min-width: 0; padding-bottom: 0; }
+.events-loading .skeleton-photo { aspect-ratio: 16/10; background: var(--surface-soft); }
+.events-loading .event-card-body { min-height: 285px; display: flex; flex-direction: column; gap: 18px; aspect-ratio: auto; background: transparent; border: 0; }
+.events-loading .skeleton-private .event-card-body { min-height: 350px; }
+.events-loading .skeleton-line { display: block; height: 16px; width: 78%; margin: 0; border-radius: 8px; background: var(--surface-soft); }
+.events-loading .skeleton-title { height: 48px; width: 95%; }
+.events-loading .skeleton-action { height: 48px; width: 100%; margin-top: auto; border-radius: var(--radius-control); }
+/* Static placeholders: no motion to disable, including reduced-motion mode. */
 .community-section { color: var(--pale); background: radial-gradient(ellipse at 85% 90%, #23534788, transparent 60%), var(--deep); padding-block: 75px; position: relative; overflow: clip; }
 .community-inner { display: grid; grid-template-columns: 1.1fr 1fr .7fr; align-items: center; gap: 38px; }
 .community-copy h2 { font: 400 clamp(36px, 3.3vw, 50px)/1.12 Georgia, serif; letter-spacing: -1px; margin-block: 14px 22px; }
