@@ -1,27 +1,18 @@
 import Image from "next/image";
-import cleanup from "../../public/images/gallery/cleanup.webp";
-import planting from "../../public/images/gallery/planting.webp";
-import donation from "../../public/images/gallery/donation.webp";
-import volunteering from "../../public/images/community-planting.webp";
-import mentoring from "../../public/images/gallery/mentoring.webp";
-
-const photos = [
-  { image: cleanup, label: "Care for shared spaces", category: "Community cleanup", alt: "Gloved volunteers collecting forest litter into bags" },
-  { image: planting, label: "Give green a beginning", category: "Planting & gardening", alt: "People tending young plants together at an outdoor workbench" },
-  { image: donation, label: "Share what you can", category: "Food donations", alt: "Volunteers sorting canned food donations on a long table" },
-  { image: volunteering, label: "Grow something together", category: "Community volunteering", alt: "Volunteers from different generations helping to plant a tree" },
-  { image: mentoring, label: "Pass a little knowledge on", category: "Education & mentoring", alt: "An adult guiding schoolchildren through a book outdoors" },
-];
+import Link from "next/link";
+import { communityEventConcepts } from "@/lib/community-event-concepts";
 
 export function CommunityGallery() {
   return <section id="community-gallery" className="community-gallery content-width" aria-labelledby="gallery-heading" tabIndex={-1}>
-    <div className="section-heading section-heading-row"><div><p className="eyebrow">Many ways to make a difference</p><h2 id="gallery-heading">Good looks different<br />on everyone.</h2></div><p>Sometimes it’s a morning outdoors.<br />Sometimes it’s simply showing up.</p></div>
-    <div className="gallery-grid">
-      {photos.map((photo, index) => <figure key={photo.category}>
-        <div className="gallery-image"><Image src={photo.image} alt={photo.alt} fill sizes="(max-width: 1023px) 50vw, 25vw" placeholder="blur" /></div>
-        <figcaption><span className="gallery-number">0{index + 1}</span><div><p>{photo.category}</p><h3>{photo.label}</h3></div></figcaption>
-      </figure>)}
+    <div className="section-heading section-heading-row"><div><p className="eyebrow">Many ways to make a difference</p><h2 id="gallery-heading">Good looks different<br />on everyone.</h2></div><p>Explore 18 ideas for caring<br />for the places we share.</p></div>
+    <div className="concept-gallery-grid">
+      {communityEventConcepts.map(({ slug, image }) => <Link key={slug} href={`/community-events/${slug}`} className="concept-gallery-card" aria-labelledby={`concept-title-${image.id}`}>
+        <figure>
+          <div className="concept-image"><Image src={image.src} alt={image.alt} fill sizes="(max-width: 389px) 100vw, (max-width: 1023px) 50vw, 33vw" /></div>
+          <figcaption><span className="gallery-number" aria-hidden="true">{image.id}</span><div><p>{image.category}</p><h3 id={`concept-title-${image.id}`}>{image.title}</h3></div></figcaption>
+        </figure>
+      </Link>)}
     </div>
-    <p className="section-note">Illustrative community-service photography, not a record of NobleNest events.</p>
+    <p className="section-note">AI-generated illustrations of proposed community-service ideas. These are not scheduled events or records of completed activities.</p>
   </section>;
 }

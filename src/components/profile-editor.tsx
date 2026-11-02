@@ -8,16 +8,17 @@ import { authError } from "@/lib/auth-policy";
 import { profileUpdateInput, validateProfile, type FieldErrors } from "@/lib/form-validation";
 import { useAuth } from "./auth-provider";
 import { FormField } from "./form-field";
+import { GoogleAccountLink } from "./google-account-link";
 
 type ProfileUser = { id: string; name: string; email: string; image?: string | null };
-export const ProfileEditor: ComponentType<{ user: ProfileUser }> = () => {
+export const ProfileEditor: ComponentType<{ user: ProfileUser; googleEnabled?: boolean }> = ({ googleEnabled = false }) => {
   const session = authClient.useSession();
   if (session.isPending) return <p className="section-note" role="status" aria-busy="true">Verifying your profile session...</p>;
   if (!session.data?.user?.id || session.error) return <p role="status">Your session could not be verified. <Link href="/login?returnTo=%2Fprofile">Log in again</Link></p>;
   const current = session.data.user;
-  return <ProfileFields key={current.id} user={current} refresh={async () => { await session.refetch(); }} />;
+  return <ProfileFields key={current.id} user={current} googleEnabled={googleEnabled} refresh={async () => { await session.refetch(); }} />;
 };
-function ProfileFields({ user, refresh }: { user: ProfileUser; refresh: () => Promise<void> }) {
+function ProfileFields({ user, refresh, googleEnabled }: { user: ProfileUser; refresh: () => Promise<void>; googleEnabled: boolean }) {
   const router = useRouter(), { notify } = useAuth(), lock = useRef(false);
   const [pending, setPending] = useState(false), [status, setStatus] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -43,6 +44,8 @@ function ProfileFields({ user, refresh }: { user: ProfileUser; refresh: () => Pr
       <FormField label="Profile photo URL" id="profile-image" error={errors.image}><input id="profile-image" name="image" type="url" autoComplete="url" required maxLength={2048} defaultValue={user.image || ""} aria-invalid={!!errors.image} aria-describedby={errors.image ? "profile-image-error" : undefined} /></FormField>
       <p className="form-hint">Your email and account permissions cannot be changed here.</p>
       <button className="button button-solid" type="submit" disabled={pending}>{pending ? "Saving profile..." : "Save profile"}</button><p className="form-status" role="status">{status}</p>
-    </form><Link href="/joined-events" className="text-link">Your community journey</Link>
+    </form>
+    {googleEnabled && <GoogleAccountLink userId={user.id} />}
+    <Link href="/joined-events" className="text-link">Your community journey</Link>
   </section>;
 }
