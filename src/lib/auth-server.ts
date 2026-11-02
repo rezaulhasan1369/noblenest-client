@@ -8,7 +8,7 @@ import { MongoClient } from "mongodb";
 import { headers } from "next/headers";
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import { validateAuth } from "./form-validation";
+import { validateAuth, profileUpdateInput } from "./form-validation";
 import { safeReturnTo } from "./auth-policy";
 
 function explicitOrigin(value: string) {
@@ -24,7 +24,7 @@ function buildAuth() {
   return betterAuth({
     appName: "NobleNest", baseURL: origin, secret: BETTER_AUTH_SECRET,
     database: mongodbAdapter(client.db(MONGODB_DB_NAME), { client }),
-    disabledPaths: ["/request-password-reset", "/reset-password", "/change-password", "/update-user", "/delete-user", "/change-email"],
+    disabledPaths: ["/request-password-reset", "/reset-password", "/change-password", "/delete-user", "/change-email"],
     trustedOrigins: [origin], logger: { disabled: true },
     advanced: { cookiePrefix: "noblenest", useSecureCookies: process.env.NODE_ENV === "production", database: { generateId: () => randomUUID() } },
     emailAndPassword: { enabled: true, minPasswordLength: 6, maxPasswordLength: 128, requireEmailVerification: false, autoSignIn: true },
@@ -33,6 +33,11 @@ function buildAuth() {
     rateLimit: { enabled: true, storage: "database", modelName: "nn_auth_rate_limit", window: 60, max: 60, customRules: { "/sign-in/email": { window: 60, max: 5 }, "/sign-up/email": { window: 60, max: 5 } } },
     socialProviders: process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? { google: { clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET } } : {},
     hooks: { before: createAuthMiddleware(async ctx => {
+      if (ctx.path === "/update-user") {
+        try { ctx.body = profileUpdateInput(ctx.body); }
+        catch { throw new APIError("BAD_REQUEST", { message: "Use a valid name and HTTPS profile photo. Only profile fields can be changed." }); }
+        return;
+      }
       if (ctx.path !== "/sign-up/email") return;
       const body = ctx.body;
       if (!body || typeof body.email !== "string" || typeof body.password !== "string" || typeof body.name !== "string" || (body.image !== undefined && typeof body.image !== "string") || Object.keys(validateAuth(body, "register")).length) throw new APIError("BAD_REQUEST", { message: "Check the registration fields and password requirements." });

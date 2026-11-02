@@ -2,7 +2,21 @@ export type FieldErrors = Record<string, string>;
 export type AuthFields = { name?: string; email: string; password: string; image?: string };
 export type EventFields = { title: string; description: string; eventType: string; thumbnailUrl: string; location: string; eventDate: string };
 export function validWebUrl(value: string) {
-  try { const url = new URL(value); return url.protocol === "https:" && !url.username && !url.password; } catch { return false; }
+  try { const url = new URL(value); return value.length <= 2048 && value.startsWith("https://") && !/[\s\\\u0000-\u001f\u007f]/.test(value) && url.protocol === "https:" && !url.username && !url.password; } catch { return false; }
+}
+export function validateProfile(values: { name: string; image: string }): FieldErrors {
+  const errors: FieldErrors = {};
+  if (!values.name.trim() || values.name.length > 100) errors.name = "Enter your name (up to 100 characters).";
+  if (!validWebUrl(values.image)) errors.image = "Enter a valid HTTPS photo URL without credentials.";
+  return errors;
+}
+export function profileUpdateInput(body: unknown) {
+  if (!body || typeof body !== "object" || Array.isArray(body)) throw Error("Invalid profile fields");
+  const fields = body as Record<string, unknown>;
+  if (Object.keys(fields).some(key => key !== "name" && key !== "image") || typeof fields.name !== "string" || typeof fields.image !== "string") throw Error("Invalid profile fields");
+  const result = { name: fields.name.trim(), image: fields.image.trim() };
+  if (Object.keys(validateProfile(result)).length) throw Error("Invalid profile fields");
+  return result;
 }
 export function validateAuth(values: AuthFields, mode: "login" | "register"): FieldErrors {
   const errors: FieldErrors = {};
@@ -12,7 +26,7 @@ export function validateAuth(values: AuthFields, mode: "login" | "register"): Fi
   if (mode === "register") {
     if (!values.name?.trim() || values.name.length > 100) errors.name = "Enter your name (up to 100 characters).";
     if (values.password.length < 6 || !/[A-Z]/.test(values.password) || !/[a-z]/.test(values.password)) errors.password = "Use at least 6 characters with an uppercase and a lowercase letter.";
-    if (values.image && !validWebUrl(values.image)) errors.image = "Use a valid HTTPS photo URL without credentials.";
+    if (!values.image || !validWebUrl(values.image)) errors.image = "Enter a valid HTTPS photo URL without credentials.";
   }
   return errors;
 }
