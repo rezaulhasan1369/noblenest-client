@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
+import { EDUCATIONAL_DISCLOSURE } from "@/lib/educational-disclosure";
 
 export function SiteFooter({ signedIn = false }: { signedIn?: boolean }) {
   return <footer className="site-footer">
@@ -11,6 +12,7 @@ export function SiteFooter({ signedIn = false }: { signedIn?: boolean }) {
         <nav aria-label="Footer account"><h2>Make room for good</h2>{!signedIn && <p className="form-hint">Sign in to access your account.</p>}<Link href={signedIn ? "/create-event" : "/login?returnTo=%2Fcreate-event"}>Create Event</Link><Link href={signedIn ? "/manage-events" : "/login?returnTo=%2Fmanage-events"}>Manage Events</Link><Link href={signedIn ? "/joined-events" : "/login?returnTo=%2Fjoined-events"}>Joined Events</Link><Link href={signedIn ? "/profile" : "/login?returnTo=%2Fprofile"}>Your profile</Link></nav>
         <nav aria-label="Footer resources"><h2>Explore more</h2><Link href="/#features">How it works</Link><Link href="/#ways-to-help">Ways to help</Link><Link href="/#newsletter">Newsletter preview</Link><Link href={signedIn ? "/profile" : "/register"}>{signedIn ? "Your account" : "Create an account"}</Link></nav>
       </div>
+      <p id="educational-project-notice" tabIndex={-1}>{EDUCATIONAL_DISCLOSURE}</p>
       <div className="footer-bottom"><p>© {new Date().getUTCFullYear()} NobleNest. Built around community.</p><p>Rooted in kindness. Growing together.</p></div>
     </div>
   </footer>;

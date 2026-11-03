@@ -67,6 +67,7 @@ export function EventRecord({ id, editing = false }: { id: string; editing?: boo
     <article className="section-heading" style={{ minWidth: 0, overflowWrap: "anywhere" }}><div className="event-thumbnail"><EventThumbnail src={event.thumbnailUrl} alt={event.thumbnailAlt} /></div><h2>{event.title}</h2><p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{event.description}</p></article>
     <aside className="detail-panel"><h2>Event details</h2><dl><dt>Location</dt><dd>{event.location}</dd><dt>Event type</dt><dd>{event.eventType}</dd><dt>Date</dt><dd><time dateTime={event.eventDate}>{date} (Bangladesh, UTC+6)</time></dd></dl>
       {owner && <OwnerActions event={event} />}
+      <a className="text-link" href="#educational-project-notice">About these listings</a>
       <JoinEvent eventId={event.id} />
     </aside>
   </div>;

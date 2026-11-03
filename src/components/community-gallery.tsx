@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { communityEventConcepts } from "@/lib/community-event-concepts";
-import { EDUCATIONAL_DISCLOSURE } from "@/lib/educational-disclosure";
 
 export function CommunityGallery() {
   return <section id="community-gallery" className="community-gallery content-width" aria-labelledby="gallery-heading" tabIndex={-1}>
@@ -14,6 +13,6 @@ export function CommunityGallery() {
         </figure>
       </Link>)}
     </div>
-    <p className="section-note">{EDUCATIONAL_DISCLOSURE} Images are AI-generated illustrations, not records of completed activities.</p>
+    <p className="section-note">Explore each idea to learn about its purpose and potential impact.</p>
   </section>;
 }
