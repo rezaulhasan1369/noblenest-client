@@ -24,7 +24,7 @@ export default function EventImageGallery() {
         <a className="text-link" href={image.src}>Open full-resolution WebP</a>
       </div>
     </article>)}</div>
-    <section className="asset-thumbnail-review" aria-labelledby="replacement-heading"><h2 id="replacement-heading">Replacement thumbnail checks</h2><p>Event 12 uses its original resolution. Event 14 uses contain to preserve its panoramic composition inside the shared card frame.</p>
+    <section className="asset-thumbnail-review" aria-labelledby="replacement-heading"><h2 id="replacement-heading">Replacement thumbnail checks</h2><p>Event 12 uses its original resolution. Event 14 uses the replacement workshop image in its original 4:3 aspect ratio.</p>
       <div className="asset-replacement-grid">{eventImageManifest.filter(image => image.id === "12" || image.id === "14").map(image => <div id={`thumbnail-${image.id}`} key={image.id}><EventCard event={createDemoEvent(image)} preview /></div>)}</div>
     </section>
   </main>;

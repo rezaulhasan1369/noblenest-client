@@ -5,6 +5,7 @@ export type EventImageAsset = {
   sourceWidth: number; sourceHeight: number; sourceBytes: number;
   src: string; width: number; height: number; bytes: number;
   variants: readonly { src: string; width: number; height: number; bytes: number }[];
+  cacheRevision?: string;
   concerns: readonly string[];
 };
 
@@ -465,37 +466,36 @@ export const eventImageManifest = [
     "title": "Youth Digital Skills Workshop — Khulna",
     "category": "Education & Mentorship",
     "alt": "AI-generated illustration: a mentor guiding young people working with laptops at a shared table; not documentation of a real event.",
-    "source": "/event-images/Batch-2/ChatGPT Image Nov 1, 2026, 06_40_59 PM-5.webp",
-    "sourceWidth": 1536,
-    "sourceHeight": 531,
-    "sourceBytes": 185810,
+    "source": "/event-images/Batch-2/ChatGPT Image Nov 1, 2026, 06_40_59 PM-5.png",
+    "cacheRevision": "c889a67a6200",
+    "sourceWidth": 1448,
+    "sourceHeight": 1086,
+    "sourceBytes": 2598595,
     "src": "/event-images/optimized/14-youth-digital-skills-workshop-khulna.webp",
-    "width": 1536,
-    "height": 531,
-    "bytes": 127958,
+    "width": 1448,
+    "height": 1086,
+    "bytes": 258980,
     "variants": [
       {
         "src": "/event-images/optimized/14-youth-digital-skills-workshop-khulna-480w.webp",
         "width": 480,
-        "height": 166,
-        "bytes": 24210
+        "height": 360,
+        "bytes": 55686
       },
       {
         "src": "/event-images/optimized/14-youth-digital-skills-workshop-khulna-960w.webp",
         "width": 960,
-        "height": 332,
-        "bytes": 63806
+        "height": 720,
+        "bytes": 153560
       },
       {
         "src": "/event-images/optimized/14-youth-digital-skills-workshop-khulna.webp",
-        "width": 1536,
-        "height": 531,
-        "bytes": 127958
+        "width": 1448,
+        "height": 1086,
+        "bytes": 258980
       }
     ],
-    "concerns": [
-      "Panoramic replacement (1536 × 531). Cover crops omit much of the scene; review thumbnail uses contain."
-    ]
+    "concerns": []
   },
   {
     "id": "15",

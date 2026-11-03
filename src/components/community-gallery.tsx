@@ -8,7 +8,7 @@ export function CommunityGallery() {
     <div className="concept-gallery-grid">
       {communityEventConcepts.map(({ slug, image }) => <Link key={slug} href={`/community-events/${slug}`} className="concept-gallery-card" aria-labelledby={`concept-title-${image.id}`}>
         <figure>
-          <div className="concept-image"><Image src={image.src} alt={image.alt} fill sizes="(max-width: 389px) 100vw, (max-width: 1023px) 50vw, 33vw" /></div>
+          <div className="concept-image"><Image src={image.cacheRevision ? `${image.src}?v=${image.cacheRevision}` : image.src} alt={image.alt} fill sizes="(max-width: 389px) 100vw, (max-width: 1023px) 50vw, 33vw" /></div>
           <figcaption><span className="gallery-number" aria-hidden="true">{image.id}</span><div><p>{image.category}</p><h3 id={`concept-title-${image.id}`}>{image.title}</h3></div></figcaption>
         </figure>
       </Link>)}

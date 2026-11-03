@@ -22,7 +22,7 @@ export default async function CommunityEventShowcase({ params }: Props) {
   const { image } = concept;
   return <PageShell eyebrow={`Community idea ${image.id} | ${image.category}`} title={image.title} description="An illustrative community-service concept, not a scheduled event.">
     <div className="concept-showcase">
-      <figure><div className="concept-image"><Image src={image.src} alt={image.alt} fill sizes="(max-width: 767px) 100vw, 65vw" /></div><figcaption className="section-note">AI-generated illustration. No real activity or attendance is documented by this image.</figcaption></figure>
+      <figure><div className="concept-image"><Image src={image.cacheRevision ? `${image.src}?v=${image.cacheRevision}` : image.src} alt={image.alt} fill sizes="(max-width: 767px) 100vw, 65vw" /></div><figcaption className="section-note">AI-generated illustration. No real activity or attendance is documented by this image.</figcaption></figure>
       <div className="concept-copy">
         <p className="eyebrow">Proposed location</p><p>{concept.proposedLocation} - suggested by the illustration title; no venue is confirmed.</p>
         <h2>The idea</h2><p>{concept.description}</p>
