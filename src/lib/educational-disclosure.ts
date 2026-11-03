@@ -1,0 +1,1 @@
+export const EDUCATIONAL_DISCLOSURE = "NobleNest is a learning project. Activities shown here are illustrative and are not confirmed real-world events. These listings are not real-world registration opportunities.";

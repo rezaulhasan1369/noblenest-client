@@ -4,6 +4,7 @@ import { EventCard } from "@/components/event-card";
 import type { UpcomingEvent, UpcomingEventsState } from "@/lib/upcoming-events";
 import { EventFeed } from "./event-feed";
 import { EventLoading } from "./event-loading";
+import { EDUCATIONAL_DISCLOSURE } from "@/lib/educational-disclosure";
 
 export function UpcomingEventsContent({ state, detailsHrefFor, preview = false }: { state: UpcomingEventsState; detailsHrefFor?: (event: UpcomingEvent) => string | undefined; preview?: boolean }) {
   if (state.status === "loading") return <EventLoading />;
@@ -23,7 +24,7 @@ export function UpcomingEventsContent({ state, detailsHrefFor, preview = false }
 export function UpcomingEvents() {
   return <section id="upcoming-events" className="upcoming-section" aria-labelledby="events-heading" tabIndex={-1}>
     <div className="content-width">
-      <div className="section-heading section-heading-row"><div><p className="eyebrow">A little time. A meaningful difference.</p><h2 id="events-heading">Upcoming Events</h2><p className="section-intro">Discover a cause, find your people, and make room for something good.</p></div><Link href="/events" className="text-link">View All Events <ArrowIcon /></Link></div>
+      <div className="section-heading section-heading-row"><div><p className="eyebrow">A little time. A meaningful difference.</p><h2 id="events-heading">Upcoming Events</h2><p className="section-intro">{EDUCATIONAL_DISCLOSURE}</p></div><Link href="/events" className="text-link">View All Events <ArrowIcon /></Link></div>
       <EventFeed />
     </div>
   </section>;

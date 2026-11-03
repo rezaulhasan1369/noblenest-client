@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { communityEventConcepts } from "@/lib/community-event-concepts";
+import { EDUCATIONAL_DISCLOSURE } from "@/lib/educational-disclosure";
 
 type Props = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
@@ -20,7 +21,7 @@ export default async function CommunityEventShowcase({ params }: Props) {
   const concept = communityEventConcepts.find(item => item.slug === slug);
   if (!concept) notFound();
   const { image } = concept;
-  return <PageShell eyebrow={`Community idea ${image.id} | ${image.category}`} title={image.title} description="An illustrative community-service concept, not a scheduled event.">
+  return <PageShell eyebrow={`Community idea ${image.id} | ${image.category}`} title={image.title} description={EDUCATIONAL_DISCLOSURE}>
     <div className="concept-showcase">
       <figure><div className="concept-image"><Image src={image.cacheRevision ? `${image.src}?v=${image.cacheRevision}` : image.src} alt={image.alt} fill sizes="(max-width: 767px) 100vw, 65vw" /></div><figcaption className="section-note">AI-generated illustration. No real activity or attendance is documented by this image.</figcaption></figure>
       <div className="concept-copy">
