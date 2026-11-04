@@ -104,7 +104,7 @@ export function SiteHeader({ session = UNAVAILABLE_SESSION, upcomingEventsHref, 
           <SessionControls session={session} mobile />
         </nav>
         <Link href={home ? "#ways-to-help" : "/#ways-to-help"} className="button button-light">Get involved <ArrowIcon diagonal /></Link>
-        <p className="mobile-menu-note">Account access and event participation are coming in a later phase.</p>
+        <p className="mobile-menu-note">Browse events, create an initiative, or view your joined events.</p>
       </dialog>
     </header>
   );

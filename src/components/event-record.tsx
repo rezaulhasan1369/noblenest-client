@@ -14,6 +14,7 @@ import { EventLoading } from "./event-loading";
 type RecordState = { id: string; event?: ApiEvent; error?: string };
 function useEventRecord(id: string) {
   const [state, setState] = useState<RecordState>({ id });
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
     eventsApi.details(id, controller.signal).then(event => {
@@ -22,11 +23,11 @@ function useEventRecord(id: string) {
       if (!controller.signal.aborted) setState({ id, error: error instanceof EventApiError && error.status === 400 ? "The event identifier is invalid." : eventErrorMessage(error) });
     });
     return () => controller.abort();
-  }, [id]);
-  return state.id === id ? state : { id };
+  }, [id, attempt]);
+  return { state: state.id === id ? state : { id }, retry: () => { setState({ id }); setAttempt(value => value + 1); } };
 }
-function RecordStatus({ state }: { state: RecordState }) {
-  return state.error ? <DataUnavailable title="Event unavailable" description={state.error} />
+function RecordStatus({ state, retry }: { state: RecordState; retry: () => void }) {
+  return state.error ? <><DataUnavailable title="Event unavailable" description={state.error} /><button className="button button-outline" type="button" onClick={retry}>Try reading event again</button></>
     : <EventLoading message="Loading event details..." detail />;
 }
 function OwnerActions({ event }: { event: ApiEvent }) {
@@ -53,9 +54,9 @@ function OwnerActions({ event }: { event: ApiEvent }) {
   </div>;
 }
 export function EventRecord({ id, editing = false }: { id: string; editing?: boolean }) {
-  const state = useEventRecord(id), session = authClient.useSession();
+  const { state, retry } = useEventRecord(id), session = authClient.useSession();
   const owner = !session.isPending && !session.error && !!state.event && session.data?.user.id === state.event.creatorId;
-  if (!state.event) return <RecordStatus state={state} />;
+  if (!state.event) return <RecordStatus state={state} retry={retry} />;
   const event = state.event;
   if (editing) {
     if (session.isPending) return <p role="status">Verifying your session...</p>;
@@ -64,7 +65,7 @@ export function EventRecord({ id, editing = false }: { id: string; editing?: boo
   }
   const date = new Intl.DateTimeFormat("en-GB", { dateStyle: "long", timeStyle: "short", timeZone: "Asia/Dhaka" }).format(new Date(event.eventDate));
   return <div className="detail-grid">
-    <article className="section-heading" style={{ minWidth: 0, overflowWrap: "anywhere" }}><div className="event-thumbnail"><EventThumbnail src={event.thumbnailUrl} alt={event.thumbnailAlt} /></div><h2>{event.title}</h2><p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{event.description}</p></article>
+    <article className="section-heading" style={{ minWidth: 0, overflowWrap: "anywhere" }}><div className="event-thumbnail"><EventThumbnail src={event.thumbnailUrl} alt={event.thumbnailAlt} sizes="(max-width: 1023px) calc(100vw - 48px), (max-width: 1439px) 62vw, 830px" /></div><h2>{event.title}</h2><p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{event.description}</p></article>
     <aside className="detail-panel"><h2>Event details</h2><dl><dt>Location</dt><dd>{event.location}</dd><dt>Event type</dt><dd>{event.eventType}</dd><dt>Date</dt><dd><time dateTime={event.eventDate}>{date} (Bangladesh, UTC+6)</time></dd></dl>
       {owner && <OwnerActions event={event} />}
       <a className="text-link" href="#educational-project-notice">About these listings</a>

@@ -33,7 +33,13 @@ export function AuthForm({ mode, actions, returnTo = "/profile" }: { mode: "logi
       <button type="submit" className="button button-solid" disabled={pending}>{pending ? "Please wait…" : registering ? "Create account" : "Login"}</button>
       <p role="status" className="form-status">{status}</p>
     </form>
-    {!registering && <><div className="form-divider"><span>or</span></div><button type="button" className="button button-outline google-button" disabled={!actions?.google || pending} onClick={async () => { try { await actions?.google?.(); } catch { setStatus("Google sign-in could not be started."); } }}>Continue with Google</button>{!actions?.google && <p className="form-hint">Google sign-in is not configured.</p>}</>}
+    {!registering && <><div className="form-divider"><span>or</span></div><button type="button" className="button button-outline google-button" disabled={!actions?.google || pending} onClick={async () => {
+      if (submitting.current || !actions?.google) return;
+      submitting.current = true; setPending(true); setStatus("");
+      try { await actions.google(); }
+      catch { setStatus("Google sign-in could not be started."); }
+      finally { submitting.current = false; setPending(false); }
+    }}>Continue with Google</button>{!actions?.google && <p className="form-hint">Google sign-in is not configured.</p>}</>}
     <p className="auth-switch">{registering ? "Already have an account?" : "New to NobleNest?"} <Link href={(registering ? "/login" : "/register") + "?returnTo=" + encodeURIComponent(returnTo)}>{registering ? "Login" : "Create an account"}</Link></p>
   </div>;
 }

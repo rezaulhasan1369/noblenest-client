@@ -4,9 +4,11 @@ import { ArrowIcon } from "@/components/arrow-icon";
 import type { UpcomingEvent } from "@/lib/upcoming-events";
 import { eventImageManifest } from "@/lib/event-image-manifest";
 
-export function EventCard({ event, detailsHref, editHref, joinedAt, preview = false }: { event: UpcomingEvent; detailsHref?: string; editHref?: string; joinedAt?: string; preview?: boolean }) {
-  // Only enrich an exact owner-asset URL match; future uploaded URLs stay intact.
+export function EventCard({ event, detailsHref, editHref, joinedAt, preview = false, headingLevel = 2 }: { event: UpcomingEvent; detailsHref?: string; editHref?: string; joinedAt?: string; preview?: boolean; headingLevel?: 2 | 3 }) {
+  // Keep established relative-asset framing unchanged. EventThumbnail resolves
+  // responsive variants separately, including approved absolute asset URLs.
   const image = eventImageManifest.find(asset => asset.src === event.thumbnailUrl);
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   const date = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Dhaka" }).format(new Date(event.eventDate));
   const time = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Dhaka" }).format(new Date(event.eventDate));
   return <article className="event-card">
@@ -14,7 +16,7 @@ export function EventCard({ event, detailsHref, editHref, joinedAt, preview = fa
     <div className="event-card-body">
       {preview && <p className="event-preview-label">Demo event · simulated schedule</p>}
       <div className="event-card-meta"><time dateTime={event.eventDate}>{date}<span>{time} · Bangladesh (UTC+6)</span></time></div>
-      <h3>{event.title}</h3>
+      <Heading>{event.title}</Heading>
       {joinedAt && <p className="section-note">Joined <time dateTime={joinedAt}>{new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Dhaka" }).format(new Date(joinedAt))}</time></p>}
       <p className="event-location"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s7-6 7-12a7 7 0 0 0-14 0c0 6 7 12 7 12Z" /><circle cx="12" cy="9" r="2" /></svg>{event.location}</p>
       <p className="event-description">{event.description || "Explore the details to learn about this activity before deciding how to take part."}</p>

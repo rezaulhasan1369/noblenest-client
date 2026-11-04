@@ -16,7 +16,7 @@ export function EventFeed({ page }: { page?: number }) {
   }, [page]);
   const state = result.page === page ? result.state : { status: "loading" } as const;
   return <>
-    <UpcomingEventsContent state={state} detailsHrefFor={event => `/events/${event.id}`} />
+    <UpcomingEventsContent state={state} detailsHrefFor={event => `/events/${event.id}`} headingLevel={page === undefined ? 3 : 2} />
     {page !== undefined && <nav className="section-heading-row" aria-label="Event pages">
       {page > 1 && <Link className="text-link" href={`/events?page=${page - 1}`}>Previous page</Link>}
       <p className="section-note" aria-live="polite">Page {page}</p>

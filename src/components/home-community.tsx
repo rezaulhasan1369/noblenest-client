@@ -3,6 +3,7 @@ import cleanup from "../../public/images/gallery/cleanup.webp";
 import donation from "../../public/images/gallery/donation.webp";
 import { ArrowIcon } from "./arrow-icon";
 import { BotanicalMark } from "./brand-logo";
+import Link from "next/link";
 
 export function HomeCommunity() {
   return <section id="our-purpose" className="community-section" aria-labelledby="purpose-heading" tabIndex={-1}>
@@ -11,6 +12,7 @@ export function HomeCommunity() {
         <h2 id="purpose-heading">People. Purpose.<br /><em>Possibility.</em></h2>
         <p>A better world begins a little closer to home. Find meaningful activities, share your ideas, and connect through a cause.</p>
         <a href="#features" className="button button-light">Find your little good <ArrowIcon /></a>
+        <p><Link className="text-link" style={{ color: "var(--pale)" }} href="/about">About NobleNest</Link></p>
       </div>
       <div className="community-collage">
         <div className="community-main-photo"><Image src={cleanup} alt="Volunteers caring for shared woodland by collecting litter" fill sizes="(max-width: 767px) 80vw, 28vw" placeholder="blur" /></div>
